@@ -15,6 +15,12 @@ USERS_TABLE = "users_table"
 client = WorkspaceClient()
 
 
+def scd2_latest(table_name, sequence, *key_cols):
+    row_num = "row_num"
+    window_spec = Window.partitionBy(*key_cols).orderBy(col(sequence).desc())
+    return spark.table(table_name).withColumn(row_num, row_number().over(window_spec)).filter(col(row_num) == 1)
+
+
 @dlt.table(name=USERS_TABLE)
 def fetch_users():
     users = (
@@ -34,31 +40,31 @@ mappings = [
     Mapping(
         source="system.information_schema.catalogs",
         subject_map=iri.catalog("catalog_name"),
-        rdf_type=iri.type("catalog"),
+        rdf_type=iri.type("Catalog"),
         predicate_object_maps={
-            iri.pred("catalog_name"): col("catalog_name"),
-            iri.pred("catalog_owner_email"): col("catalog_owner"),
+            iri.pred("catalogName"): col("catalog_name"),
+            iri.pred("catalogOwnerEmail"): col("catalog_owner"),
         },
     ),
     Mapping(
         source="system.information_schema.schemata",
         subject_map=iri.schema("catalog_name", "schema_name"),
-        rdf_type=iri.type("schema"),
+        rdf_type=iri.type("Schema"),
         predicate_object_maps={
-            iri.pred("schema_name"): col("schema_name"),
-            iri.pred("schema_owner_email"): col("schema_owner"),
-            iri.pred("in_catalog"): iri.catalog("catalog_name"),
+            iri.pred("schemaName"): col("schema_name"),
+            iri.pred("schemaOwnerEmail"): col("schema_owner"),
+            iri.pred("inCatalog"): iri.catalog("catalog_name"),
         },
     ),
     Mapping(
         source="system.information_schema.tables",
         subject_map=iri.table("table_catalog", "table_schema", "table_name"),
-        rdf_type=iri.type("table"),
+        rdf_type=iri.type("Table"),
         predicate_object_maps={
-            iri.pred("table_name"): col("table_name"),
-            iri.pred("table_type"): col("table_type"),
-            iri.pred("table_owner_email"): col("table_owner"),
-            iri.pred("in_schema"): iri.schema("table_catalog", "table_schema"),
+            iri.pred("tableName"): col("table_name"),
+            iri.pred("tableType"): col("table_type"),
+            iri.pred("tableOwnerEmail"): col("table_owner"),
+            iri.pred("tableInSchema"): iri.schema("table_catalog", "table_schema"),
         },
     ),
     # TODO this is currently very slow so we skip it
@@ -67,32 +73,32 @@ mappings = [
     #     subject_map=iri.column(
     #         "table_catalog", "table_schema", "table_name", "column_name"
     #     ),
-    #     rdf_type=iri.type("column"),
+    #     rdf_type=iri.type("Column"),
     #     predicate_object_maps={
-    #         iri.pred("column_name"): col("column_name"),
-    #         iri.pred("column_data_type"): col("data_type"),
-    #         iri.pred("in_table"): iri.table("table_catalog", "table_schema", "table_name"),
+    #         iri.pred("columnName"): col("column_name"),
+    #         iri.pred("columnDataType"): col("data_type"),
+    #         iri.pred("inTable"): iri.table("table_catalog", "table_schema", "table_name"),
     #     },
     # ),
     Mapping(
         source="system.information_schema.volumes",
         subject_map=iri.volume("volume_catalog", "volume_schema", "volume_name"),
-        rdf_type=iri.type("volume"),
+        rdf_type=iri.type("Volume"),
         predicate_object_maps={
-            iri.pred("volume_name"): col("volume_name"),
-            iri.pred("volume_owner_email"): col("volume_owner"),
-            iri.pred("in_schema"): iri.schema("volume_catalog", "volume_schema"),
+            iri.pred("volumeName"): col("volume_name"),
+            iri.pred("volumeOwnerEmail"): col("volume_owner"),
+            iri.pred("volumeInSchema"): iri.schema("volume_catalog", "volume_schema"),
         },
     ),
     Mapping(
         source="system.query.history",
         subject_map=iri.query("workspace_id", "statement_id"),
-        rdf_type=iri.type("query"),
+        rdf_type=iri.type("Query"),
         predicate_object_maps={
-            iri.pred("statement_id"): col("statement_id"),
-            iri.pred("executed_by"): iri.user("executed_by_user_id"),
-            iri.pred("workspace_id"): iri.workspace("workspace_id"),
-            iri.pred("query_compute"): when(
+            iri.pred("statementId"): col("statement_id"),
+            iri.pred("executedBy"): iri.user("executed_by_user_id"),
+            iri.pred("executedInWorkspace"): iri.workspace("workspace_id"),
+            iri.pred("queryCompute"): when(
                 col("compute.warehouse_id").isNotNull(),
                 iri.warehouse("workspace_id", "compute.warehouse_id"),
             ).when(
@@ -103,73 +109,102 @@ mappings = [
     Mapping(
         source="system.compute.warehouses",
         subject_map=iri.warehouse("workspace_id", "warehouse_id"),
-        rdf_type=iri.type("warehouse"),
+        rdf_type=iri.type("Warehouse"),
         predicate_object_maps={
-            iri.pred("warehouse_id"): col("warehouse_id"),
-            iri.pred("warehouse_name"): col("warehouse_name"),
-            iri.pred("workspace_id"): iri.workspace("workspace_id"),
+            iri.pred("warehouseId"): col("warehouse_id"),
+            iri.pred("warehouseName"): col("warehouse_name"),
+            iri.pred("warehouseInWorkspace"): iri.workspace("workspace_id"),
         },
     ),
     Mapping(
         source="system.compute.clusters",
         subject_map=iri.cluster("workspace_id", "cluster_id"),
-        rdf_type=iri.type("cluster"),
+        rdf_type=iri.type("Cluster"),
         predicate_object_maps={
-            iri.pred("cluster_id"): col("cluster_id"),
-            iri.pred("cluster_name"): col("cluster_name"),
-            iri.pred("dbr_version"): col("dbr_version"),
-            iri.pred("cluster_owner_email"): col("owned_by"),
-            iri.pred("workspace_id"): iri.workspace("workspace_id"),
+            iri.pred("clusterId"): col("cluster_id"),
+            iri.pred("clusterName"): col("cluster_name"),
+            iri.pred("dbrVersion"): col("dbr_version"),
+            iri.pred("clusterOwnerEmail"): col("owned_by"),
+            iri.pred("clusterInWorkspace"): iri.workspace("workspace_id"),
         },
     ),
     Mapping(
         source=USERS_TABLE,
         subject_map=iri.user("id"),
-        rdf_type=iri.type("user"),
+        rdf_type=iri.type("User"),
         predicate_object_maps={
-            iri.pred("user_id"): col("id"),
-            iri.pred("user_email"): explode("emails"),
+            iri.pred("userId"): col("id"),
+            iri.pred("userEmail"): explode("emails"),
         }),
     Mapping(
-        source="system.lakeflow.pipelines",
+        source=scd2_latest("system.lakeflow.pipelines", "change_time", "workspace_id", "pipeline_id"),
         subject_map=iri.pipeline("workspace_id", "pipeline_id"),
-        rdf_type=iri.type("pipeline"),
+        rdf_type=iri.type("Pipeline"),
         predicate_object_maps={
-            iri.pred("pipeline_id"): col("pipeline_id"),
-            iri.pred("pipeline_name"): col("name"),
-            iri.pred("creator_email"): col("created_by"),
-            iri.pred("run_as_email"): col("run_as"),
-            iri.pred("workspace_id"): iri.workspace("workspace_id"),
+            iri.pred("pipelineId"): col("pipeline_id"),
+            iri.pred("pipelineName"): col("name"),
+            iri.pred("pipelineCreatorEmail"): col("created_by"),
+            iri.pred("pipelineRunAsEmail"): col("run_as"),
+            iri.pred("pipelineInWorkspace"): iri.workspace("workspace_id"),
         },
     ),
+    # notebook to table
     Mapping(
-        source="system.access.table_lineage",
-        subject_map=when(col("entity_metadata.notebook_id").isNotNull(),
-                         iri.notebook("workspace_id", "entity_metadata.notebook_id")) \
-            .when(col("entity_metadata.sql_query_id").isNotNull(),
-                  iri.query("workspace_id", "statement_id")) \
-            .when(col("entity_metadata.dlt_pipeline_info").isNotNull(),
-                  iri.pipeline("workspace_id", "entity_metadata.dlt_pipeline_info.dlt_pipeline_id")),
+        source=spark.table("system.access.table_lineage").filter(col("entity_metadata.notebook_id").isNotNull()),
+        subject_map=iri.notebook("workspace_id", "entity_metadata.notebook_id"),
         predicate_object_maps={
-            iri.pred("read"): when(col("source_table_name").isNotNull(),
-                                   iri.table("source_table_catalog", "source_table_schema", "source_table_name")),
-            iri.pred("wrote"): when(col("target_table_name").isNotNull(),
-                                    iri.table("target_table_catalog", "target_table_schema", "target_table_name")),
+            iri.pred("notebookReadTable"): when(col("source_table_name").isNotNull(),
+                                                iri.table("source_table_catalog", "source_table_schema",
+                                                          "source_table_name")),
+            iri.pred("notebookWriteTable"): when(col("target_table_name").isNotNull(),
+                                                 iri.table("target_table_catalog", "target_table_schema",
+                                                           "target_table_name")),
             iri.pred("timestamp"): col("event_time"),
         },
 
     ),
+    # query to table
+    Mapping(
+        source=spark.table("system.access.table_lineage").filter(col("entity_metadata.sql_query_id").isNotNull()),
+        subject_map=iri.query("workspace_id", "statement_id"),
+        predicate_object_maps={
+            iri.pred("queryReadTable"): when(col("source_table_name").isNotNull(),
+                                             iri.table("source_table_catalog", "source_table_schema",
+                                                       "source_table_name")),
+            iri.pred("queryWriteTable"): when(col("target_table_name").isNotNull(),
+                                              iri.table("target_table_catalog", "target_table_schema",
+                                                        "target_table_name")),
+            # TODO what to do with the timestamps?
+            iri.pred("timestamp"): col("event_time"),
+        },
+    ),
+    # pipeline to table
+    Mapping(
+        source=spark.table("system.access.table_lineage").filter(col("entity_metadata.dlt_pipeline_info").isNotNull()),
+        subject_map=iri.pipeline("workspace_id", "entity_metadata.dlt_pipeline_info.dlt_pipeline_id"),
+        predicate_object_maps={
+            iri.pred("pipelineReadTable"): when(col("source_table_name").isNotNull(),
+                                                iri.table("source_table_catalog", "source_table_schema",
+                                                          "source_table_name")),
+            iri.pred("pipelineWriteTable"): when(col("target_table_name").isNotNull(),
+                                                 iri.table("target_table_catalog", "target_table_schema",
+                                                           "target_table_name")),
+            # TODO what to do with the timestamps?
+            iri.pred("timestamp"): col("event_time"),
+        },
+    ),
     Mapping(
         source="system.access.workspaces_latest",
         subject_map=iri.workspace("workspace_id"),
+        rdf_type=iri.type("Workspace"),
         predicate_object_maps={
-            iri.pred("workspace_name"): col("workspace_name"),
-            iri.pred("workspace_status"): col("status"),
+            iri.pred("workspaceName"): col("workspace_name"),
+            iri.pred("workspaceStatus"): col("status"),
         }
     )
 ]
 
-mapped_names = [mapping.to_dlt(spark, mapping.source.replace('.', '_')+'_mapped') for mapping in mappings]
+mapped_names = [mapping.to_dlt(spark, mapping.source.replace('.', '_') + '_mapped') for mapping in mappings]
 
 
 @dlt.table(name=OUTPUT_TABLE, comment="Databricks metadata in triple format")
