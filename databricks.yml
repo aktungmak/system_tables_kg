@@ -9,60 +9,8 @@ variables:
     default: joshua_green
   output_table:
     default: ${var.output_catalog}.${var.output_schema}.triples
-  users_table:
-    default: ${var.output_catalog}.${var.output_schema}.users
-  pipelines_table:
-    default: ${var.output_catalog}.${var.output_schema}.pipelines
-  query_to_table_table:
-    default: ${var.output_catalog}.${var.output_schema}.query_to_table
-  table_to_pipeline_table:
-    default: ${var.output_catalog}.${var.output_schema}.table_to_pipeline
-  tables_to_build:
-    # TODO: this sucks
-    default: '["users", "pipelines", "query_to_table", "table_to_pipeline", "columns"]'
 
 resources:
-  jobs:
-    ontobricks_job:
-      name: ontobricks_job
-
-      tasks:
-        - task_key: refresh_api_tables_concurrently
-          for_each_task:
-            concurrency: 20
-            inputs: ${var.tables_to_build}
-            task:
-              task_key: ingest_one_table
-              environment_key: serverless_python
-              spark_python_task:
-                parameters:
-                  - ${var.output_catalog}
-                  - ${var.output_schema}
-                  - "{{input}}"
-                python_file: src/api2tables.py
-#        - task_key: refresh_api_tables
-#          environment_key: serverless_python
-#          spark_python_task:
-#            parameters:
-#              - ${var.output_catalog}
-#              - ${var.output_schema}
-#            python_file: src/api2tables.py
-
-        - task_key: refresh_pipeline
-          depends_on:
-            - task_key: refresh_api_tables_concurrently
-          pipeline_task:
-            pipeline_id: ${resources.pipelines.ontobricks_pipeline.id}
-
-      environments:
-        - environment_key: serverless_python
-          spec:
-            environment_version: 1
-            client: 1
-  #            dependencies:
-  #              - sql_metadata
-  #              - git+https://github.com/aktungmak/spark-r2r.git
-
   pipelines:
     ontobricks_pipeline:
       name: ontobricks_pipeline
@@ -76,10 +24,6 @@ resources:
       configuration:
         bundle.sourcePath: ${workspace.file_path}/src
         output_table: ${var.output_table}
-        users_table: ${var.users_table}
-        pipelines_table: ${var.pipelines_table}
-        query_to_table_table: ${var.query_to_table_table}
-        table_to_pipeline_table: ${var.table_to_pipeline_table}
 
 targets:
   dev:

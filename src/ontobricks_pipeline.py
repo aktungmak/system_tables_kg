@@ -1,6 +1,8 @@
 import subprocess
 from functools import reduce
 
+from databricks.sdk import WorkspaceClient
+
 subprocess.check_call(["pip", "install", "git+https://github.com/aktungmak/spark-r2r.git"])
 from r2r import Mapping
 from pyspark.sql.functions import col, when, explode
@@ -8,10 +10,25 @@ import dlt
 import iri
 
 OUTPUT_TABLE = spark.conf.get("output_table")
-USERS_TABLE = spark.conf.get("users_table")
-PIPELINES_TABLE = spark.conf.get("pipelines_table")
-QUERY_TO_TABLE_TABLE = spark.conf.get("query_to_table_table")
-TABLE_TO_PIPELINE_TABLE = spark.conf.get("table_to_pipeline_table")
+USERS_TABLE = "users_table"
+
+client = WorkspaceClient()
+
+
+@dlt.table(name=USERS_TABLE)
+def fetch_users():
+    users = (
+        {
+            "id": user.id,
+            "active": user.active,
+            "display_name": user.display_name,
+            "groups": [group.value for group in user.groups],
+            "emails": [email.value for email in user.emails],
+        }
+        for user in client.users.list()
+    )
+    return spark.createDataFrame(users)
+
 
 mappings = [
     Mapping(
@@ -114,35 +131,45 @@ mappings = [
             iri.pred("user_email"): explode("emails"),
         }),
     Mapping(
-        source=PIPELINES_TABLE,
-        subject_map=iri.pipeline("workspace_id", "id"),
+        source="system.lakeflow.pipelines",
+        subject_map=iri.pipeline("workspace_id", "pipeline_id"),
         rdf_type=iri.type("pipeline"),
         predicate_object_maps={
-            iri.pred("pipeline_id"): col("id"),
+            iri.pred("pipeline_id"): col("pipeline_id"),
             iri.pred("pipeline_name"): col("name"),
-            iri.pred("creator_user_name"): col("creator_user_name"),
-            iri.pred("run_as_user_name"): col("run_as_user_name"),
+            iri.pred("creator_email"): col("created_by"),
+            iri.pred("run_as_email"): col("run_as"),
             iri.pred("workspace_id"): iri.workspace("workspace_id"),
         },
     ),
     Mapping(
-        source=QUERY_TO_TABLE_TABLE,
-        subject_map=iri.query("workspace_id", "query_id"),
+        source="system.access.table_lineage",
+        subject_map=when(col("entity_metadata.notebook_id").isNotNull(),
+                         iri.notebook("workspace_id", "entity_metadata.notebook_id")) \
+            .when(col("entity_metadata.sql_query_id").isNotNull(),
+                  iri.query("workspace_id", "statement_id")) \
+            .when(col("entity_metadata.dlt_pipeline_info").isNotNull(),
+                  iri.pipeline("workspace_id", "entity_metadata.dlt_pipeline_info.dlt_pipeline_id")),
         predicate_object_maps={
-            iri.pred("queries"): iri.table("catalog_name", "schema_name", "table_name")
+            iri.pred("read"): when(col("source_table_name").isNotNull(),
+                                   iri.table("source_table_catalog", "source_table_schema", "source_table_name")),
+            iri.pred("wrote"): when(col("target_table_name").isNotNull(),
+                                    iri.table("target_table_catalog", "target_table_schema", "target_table_name")),
+            iri.pred("timestamp"): col("event_time"),
         },
+
     ),
     Mapping(
-        source=TABLE_TO_PIPELINE_TABLE,
-        subject_map=iri.table("catalog_name", "schema_name", "table_name"),
+        source="system.access.workspaces_latest",
+        subject_map=iri.workspace("workspace_id"),
         predicate_object_maps={
-            iri.pred("in_pipeline"): iri.pipeline("workspace_id", "pipeline_id"),
-        },
-    ),
+            iri.pred("workspace_name"): col("workspace_name"),
+            iri.pred("workspace_status"): col("status"),
+        }
+    )
 ]
 
-
-mapped_names = [mapping.to_dlt(spark, mapping.source.replace('.', '_')) for mapping in mappings]
+mapped_names = [mapping.to_dlt(spark, mapping.source.replace('.', '_')+'_mapped') for mapping in mappings]
 
 
 @dlt.table(name=OUTPUT_TABLE, comment="Databricks metadata in triple format")
