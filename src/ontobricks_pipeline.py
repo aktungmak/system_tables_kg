@@ -1,10 +1,10 @@
 import subprocess
 from functools import reduce
 
-from databricks.sdk import WorkspaceClient
-
 subprocess.check_call(["pip", "install", "git+https://github.com/aktungmak/spark-r2r.git"])
 from r2r import Mapping
+from databricks.sdk import WorkspaceClient
+from pyspark.sql import Window
 from pyspark.sql.functions import col, when, explode
 import dlt
 import iri
@@ -159,7 +159,8 @@ mappings = [
             iri.pred("notebookWriteTable"): when(col("target_table_name").isNotNull(),
                                                  iri.table("target_table_catalog", "target_table_schema",
                                                            "target_table_name")),
-            iri.pred("timestamp"): col("event_time"),
+            # TODO what to do with the timestamps?
+            # iri.pred("timestamp"): col("event_time"),
         },
 
     ),
@@ -175,7 +176,7 @@ mappings = [
                                               iri.table("target_table_catalog", "target_table_schema",
                                                         "target_table_name")),
             # TODO what to do with the timestamps?
-            iri.pred("timestamp"): col("event_time"),
+            # iri.pred("timestamp"): col("event_time"),
         },
     ),
     # pipeline to table
@@ -190,7 +191,7 @@ mappings = [
                                                  iri.table("target_table_catalog", "target_table_schema",
                                                            "target_table_name")),
             # TODO what to do with the timestamps?
-            iri.pred("timestamp"): col("event_time"),
+            # iri.pred("timestamp"): col("event_time"),
         },
     ),
     Mapping(
