@@ -1,7 +1,7 @@
 from pyspark.sql.functions import format_string, url_encode
 from pyspark.sql.column import Column
 
-dbx_prefix = "http://www.databricks.com/ontology/systemTables/"
+dbx_prefix = "http://www.databricks.com/ontology/"
 
 
 def _encode_all(*args) -> list:
@@ -10,6 +10,14 @@ def _encode_all(*args) -> list:
 
 def format_iri(format: str, *cols: Column | str):
     return format_string(f"<{format}>", *cols)
+
+
+def region(cloud: str, region: str) -> Column:
+    return format_iri("region/%s/%s", cloud, region)
+
+
+def metastore(metastore_id: str) -> Column:
+    return format_iri(dbx_prefix + "metastore/%s", metastore_id)
 
 
 # TODO add metastore ID

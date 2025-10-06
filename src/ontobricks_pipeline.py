@@ -37,6 +37,17 @@ def fetch_users():
 
 
 mappings = {
+    "metastores":
+        Mapping(
+            source="system.information_schema.metastores",
+            subject_map=iri.metastore("metastore_id"),
+            rdf_type=iri.type("Metastore"),
+            predicate_object_maps={
+                iri.pred("metastoreId"): col("metastore_id"),
+                iri.pred("metastoreName"): col("metastore_name"),
+                iri.pred("metastoreRegion"): iri.region("cloud", "region"),
+            }
+        ),
     "catalogs":
         Mapping(
             source="system.information_schema.catalogs",
@@ -45,6 +56,7 @@ mappings = {
             predicate_object_maps={
                 iri.pred("catalogName"): col("catalog_name"),
                 iri.pred("catalogOwnerEmail"): col("catalog_owner"),
+                # TODO add inMetastore when it is available in the system table
             },
         ),
     "schemata":
@@ -219,7 +231,9 @@ mappings = {
 mapped_names = [mapping.to_dlt(spark, name) for name, mapping in mappings.items()]
 
 
-@dlt.table(name=OUTPUT_TABLE, comment="Databricks metadata in triple format")
+@dlt.table(name=OUTPUT_TABLE,
+           comment="Databricks metadata in triple format",
+           cluster_by=["s", "p", "o"])
 def union_all_tables():
     mapped_tables = (
         dlt.read(mapped_name)
