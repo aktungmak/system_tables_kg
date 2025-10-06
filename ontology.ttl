@@ -1,145 +1,145 @@
-@prefix : <http://www.databricks.com/ontology/systemTables/> .
+@prefix : <http://www.databricks.com/ontology/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.databricks.com/ontology/systemTables/> .
+@base <http://www.databricks.com/ontology/> .
 
-<http://www.databricks.com/ontology/systemTables/> rdf:type owl:Ontology .
+<http://www.databricks.com/ontology/> rdf:type owl:Ontology .
 
 #################################################################
 #    Object Properties
 #################################################################
 
-###  http://www.databricks.com/ontology/systemTables/clusterInWorkspace
+###  http://www.databricks.com/ontology/clusterInWorkspace
 :clusterInWorkspace rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf :inWorkspace ;
                     rdfs:domain :Cluster .
 
 
-###  http://www.databricks.com/ontology/systemTables/executedBy
+###  http://www.databricks.com/ontology/executedBy
 :executedBy rdf:type owl:ObjectProperty ;
             rdfs:domain :Query ;
             rdfs:range :User .
 
 
-###  http://www.databricks.com/ontology/systemTables/executedInWorkspace
+###  http://www.databricks.com/ontology/executedInWorkspace
 :executedInWorkspace rdf:type owl:ObjectProperty ;
                      rdfs:subPropertyOf :inWorkspace ;
                      rdfs:domain :Query .
 
 
-###  http://www.databricks.com/ontology/systemTables/functionInSchema
+###  http://www.databricks.com/ontology/functionInSchema
 :functionInSchema rdf:type owl:ObjectProperty ;
                   rdfs:subPropertyOf :inSchema ;
                   rdfs:domain :Function .
 
 
-###  http://www.databricks.com/ontology/systemTables/inCatalog
+###  http://www.databricks.com/ontology/inCatalog
 :inCatalog rdf:type owl:ObjectProperty ;
            rdfs:domain :Schema ;
            rdfs:range :Catalog .
 
 
-###  http://www.databricks.com/ontology/systemTables/inSchema
+###  http://www.databricks.com/ontology/inSchema
 :inSchema rdf:type owl:ObjectProperty ;
           rdfs:range :Schema .
 
 
-###  http://www.databricks.com/ontology/systemTables/inTable
+###  http://www.databricks.com/ontology/inTable
 :inTable rdf:type owl:ObjectProperty ;
          rdfs:domain :Column ;
          rdfs:range :Table .
 
 
-###  http://www.databricks.com/ontology/systemTables/inWorkspace
+###  http://www.databricks.com/ontology/inWorkspace
 :inWorkspace rdf:type owl:ObjectProperty ;
              rdfs:range :Workspace .
 
 
-###  http://www.databricks.com/ontology/systemTables/lineageAction
+###  http://www.databricks.com/ontology/lineageAction
 :lineageAction rdf:type owl:ObjectProperty .
 
 
-###  http://www.databricks.com/ontology/systemTables/notebookReadTable
+###  http://www.databricks.com/ontology/notebookReadTable
 :notebookReadTable rdf:type owl:ObjectProperty ;
                    rdfs:subPropertyOf :readTable ;
                    rdfs:domain :Notebook .
 
 
-###  http://www.databricks.com/ontology/systemTables/notebookWriteTable
+###  http://www.databricks.com/ontology/notebookWriteTable
 :notebookWriteTable rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf :writeTable ;
                     rdfs:domain :Notebook .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineInWorkspace
+###  http://www.databricks.com/ontology/pipelineInWorkspace
 :pipelineInWorkspace rdf:type owl:ObjectProperty ;
                      rdfs:subPropertyOf :inWorkspace ;
                      rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineReadTable
+###  http://www.databricks.com/ontology/pipelineReadTable
 :pipelineReadTable rdf:type owl:ObjectProperty ;
                    rdfs:subPropertyOf :readTable ;
                    rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineWriteTable
+###  http://www.databricks.com/ontology/pipelineWriteTable
 :pipelineWriteTable rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf :writeTable ;
                     rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/queryCompute
+###  http://www.databricks.com/ontology/queryCompute
 :queryCompute rdf:type owl:ObjectProperty ;
               rdfs:domain :Query ;
               rdfs:range :Compute .
 
 
-###  http://www.databricks.com/ontology/systemTables/queryReadTable
+###  http://www.databricks.com/ontology/queryReadTable
 :queryReadTable rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :readTable ;
                 rdfs:domain :Query .
 
 
-###  http://www.databricks.com/ontology/systemTables/queryWriteTable
+###  http://www.databricks.com/ontology/queryWriteTable
 :queryWriteTable rdf:type owl:ObjectProperty ;
                  rdfs:subPropertyOf :writeTable ;
                  rdfs:domain :Query .
 
 
-###  http://www.databricks.com/ontology/systemTables/readTable
+###  http://www.databricks.com/ontology/readTable
 :readTable rdf:type owl:ObjectProperty ;
            rdfs:subPropertyOf :tableLineageAction ;
            rdfs:range :Table .
 
 
-###  http://www.databricks.com/ontology/systemTables/tableInSchema
+###  http://www.databricks.com/ontology/tableInSchema
 :tableInSchema rdf:type owl:ObjectProperty ;
                rdfs:subPropertyOf :inSchema ;
                rdfs:domain :Table .
 
 
-###  http://www.databricks.com/ontology/systemTables/tableLineageAction
+###  http://www.databricks.com/ontology/tableLineageAction
 :tableLineageAction rdf:type owl:ObjectProperty ;
                     rdfs:subPropertyOf :lineageAction .
 
 
-###  http://www.databricks.com/ontology/systemTables/volumeInSchema
+###  http://www.databricks.com/ontology/volumeInSchema
 :volumeInSchema rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :inSchema ;
                 rdfs:domain :Volume .
 
 
-###  http://www.databricks.com/ontology/systemTables/warehouseInWorkspace
+###  http://www.databricks.com/ontology/warehouseInWorkspace
 :warehouseInWorkspace rdf:type owl:ObjectProperty ;
                       rdfs:subPropertyOf :inWorkspace ;
                       rdfs:domain :Warehouse .
 
 
-###  http://www.databricks.com/ontology/systemTables/writeTable
+###  http://www.databricks.com/ontology/writeTable
 :writeTable rdf:type owl:ObjectProperty ;
             rdfs:subPropertyOf :tableLineageAction ;
             rdfs:range :Table .
@@ -149,172 +149,172 @@
 #    Data properties
 #################################################################
 
-###  http://www.databricks.com/ontology/systemTables/catalogName
+###  http://www.databricks.com/ontology/catalogName
 :catalogName rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf :name ;
              rdfs:domain :Catalog .
 
 
-###  http://www.databricks.com/ontology/systemTables/catalogOwnerEmail
+###  http://www.databricks.com/ontology/catalogOwnerEmail
 :catalogOwnerEmail rdf:type owl:DatatypeProperty ;
                    rdfs:subPropertyOf :email ;
                    rdfs:domain :Catalog .
 
 
-###  http://www.databricks.com/ontology/systemTables/clusterId
+###  http://www.databricks.com/ontology/clusterId
 :clusterId rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :id ;
            rdfs:domain :Cluster .
 
 
-###  http://www.databricks.com/ontology/systemTables/clusterName
+###  http://www.databricks.com/ontology/clusterName
 :clusterName rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf :name ;
              rdfs:domain :Cluster .
 
 
-###  http://www.databricks.com/ontology/systemTables/clusterOwnerEmail
+###  http://www.databricks.com/ontology/clusterOwnerEmail
 :clusterOwnerEmail rdf:type owl:DatatypeProperty ;
                    rdfs:subPropertyOf :email ;
                    rdfs:domain :Cluster .
 
 
-###  http://www.databricks.com/ontology/systemTables/columnDataType
+###  http://www.databricks.com/ontology/columnDataType
 :columnDataType rdf:type owl:DatatypeProperty ;
                 rdfs:domain :Column .
 
 
-###  http://www.databricks.com/ontology/systemTables/columnName
+###  http://www.databricks.com/ontology/columnName
 :columnName rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf :name ;
             rdfs:domain :Column .
 
 
-###  http://www.databricks.com/ontology/systemTables/dbrVersion
+###  http://www.databricks.com/ontology/dbrVersion
 :dbrVersion rdf:type owl:DatatypeProperty ;
             rdfs:domain :Cluster .
 
 
-###  http://www.databricks.com/ontology/systemTables/email
+###  http://www.databricks.com/ontology/email
 :email rdf:type owl:DatatypeProperty .
 
 
-###  http://www.databricks.com/ontology/systemTables/functionName
+###  http://www.databricks.com/ontology/functionName
 :functionName rdf:type owl:DatatypeProperty ;
               rdfs:subPropertyOf :name ;
               rdfs:domain :Function .
 
 
-###  http://www.databricks.com/ontology/systemTables/id
+###  http://www.databricks.com/ontology/id
 :id rdf:type owl:DatatypeProperty .
 
 
-###  http://www.databricks.com/ontology/systemTables/name
+###  http://www.databricks.com/ontology/name
 :name rdf:type owl:DatatypeProperty .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineCreatorEmail
+###  http://www.databricks.com/ontology/pipelineCreatorEmail
 :pipelineCreatorEmail rdf:type owl:DatatypeProperty ;
                       rdfs:subPropertyOf :email ;
                       rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineId
+###  http://www.databricks.com/ontology/pipelineId
 :pipelineId rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf :id ;
             rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineName
+###  http://www.databricks.com/ontology/pipelineName
 :pipelineName rdf:type owl:DatatypeProperty ;
               rdfs:subPropertyOf :name ;
               rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/pipelineRunAsEmail
+###  http://www.databricks.com/ontology/pipelineRunAsEmail
 :pipelineRunAsEmail rdf:type owl:DatatypeProperty ;
                     rdfs:subPropertyOf :email ;
                     rdfs:domain :Pipeline .
 
 
-###  http://www.databricks.com/ontology/systemTables/schemaName
+###  http://www.databricks.com/ontology/schemaName
 :schemaName rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf :name ;
             rdfs:domain :Schema .
 
 
-###  http://www.databricks.com/ontology/systemTables/schemaOwnerEmail
+###  http://www.databricks.com/ontology/schemaOwnerEmail
 :schemaOwnerEmail rdf:type owl:DatatypeProperty ;
                   rdfs:subPropertyOf :email ;
                   rdfs:domain :Schema .
 
 
-###  http://www.databricks.com/ontology/systemTables/statementId
+###  http://www.databricks.com/ontology/statementId
 :statementId rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf :id ;
              rdfs:domain :Query .
 
 
-###  http://www.databricks.com/ontology/systemTables/tableName
+###  http://www.databricks.com/ontology/tableName
 :tableName rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :name ;
            rdfs:domain :Table .
 
 
-###  http://www.databricks.com/ontology/systemTables/tableOwnerEmail
+###  http://www.databricks.com/ontology/tableOwnerEmail
 :tableOwnerEmail rdf:type owl:DatatypeProperty ;
                  rdfs:subPropertyOf :email ;
                  rdfs:domain :Table .
 
 
-###  http://www.databricks.com/ontology/systemTables/tableType
+###  http://www.databricks.com/ontology/tableType
 :tableType rdf:type owl:DatatypeProperty ;
            rdfs:domain :Table .
 
 
-###  http://www.databricks.com/ontology/systemTables/userEmail
+###  http://www.databricks.com/ontology/userEmail
 :userEmail rdf:type owl:DatatypeProperty ;
            rdfs:subPropertyOf :email ;
            rdfs:domain :User .
 
 
-###  http://www.databricks.com/ontology/systemTables/userId
+###  http://www.databricks.com/ontology/userId
 :userId rdf:type owl:DatatypeProperty ;
         rdfs:subPropertyOf :id ;
         rdfs:domain :User .
 
 
-###  http://www.databricks.com/ontology/systemTables/volumeName
+###  http://www.databricks.com/ontology/volumeName
 :volumeName rdf:type owl:DatatypeProperty ;
             rdfs:subPropertyOf :name ;
             rdfs:domain :Volume .
 
 
-###  http://www.databricks.com/ontology/systemTables/volumeOwnerEmail
+###  http://www.databricks.com/ontology/volumeOwnerEmail
 :volumeOwnerEmail rdf:type owl:DatatypeProperty ;
                   rdfs:subPropertyOf :email ;
                   rdfs:domain :Volume .
 
 
-###  http://www.databricks.com/ontology/systemTables/warehouseId
+###  http://www.databricks.com/ontology/warehouseId
 :warehouseId rdf:type owl:DatatypeProperty ;
              rdfs:subPropertyOf :id ;
              rdfs:domain :Warehouse .
 
 
-###  http://www.databricks.com/ontology/systemTables/warehouseName
+###  http://www.databricks.com/ontology/warehouseName
 :warehouseName rdf:type owl:DatatypeProperty ;
                rdfs:subPropertyOf :name ;
                rdfs:domain :Warehouse .
 
 
-###  http://www.databricks.com/ontology/systemTables/workspaceName
+###  http://www.databricks.com/ontology/workspaceName
 :workspaceName rdf:type owl:DatatypeProperty ;
                rdfs:subPropertyOf :name ;
                rdfs:domain :Workspace .
 
 
-###  http://www.databricks.com/ontology/systemTables/workspaceStatus
+###  http://www.databricks.com/ontology/workspaceStatus
 :workspaceStatus rdf:type owl:DatatypeProperty ;
                  rdfs:domain :Workspace .
 
@@ -323,81 +323,81 @@
 #    Classes
 #################################################################
 
-###  http://www.databricks.com/ontology/systemTables/Catalog
+###  http://www.databricks.com/ontology/Catalog
 :Catalog rdf:type owl:Class ;
          rdfs:subClassOf :Securable .
 
 
-###  http://www.databricks.com/ontology/systemTables/Cluster
+###  http://www.databricks.com/ontology/Cluster
 :Cluster rdf:type owl:Class ;
          rdfs:subClassOf :Compute .
 
 
-###  http://www.databricks.com/ontology/systemTables/Column
+###  http://www.databricks.com/ontology/Column
 :Column rdf:type owl:Class ;
         rdfs:subClassOf :Securable .
 
 
-###  http://www.databricks.com/ontology/systemTables/Compute
+###  http://www.databricks.com/ontology/Compute
 :Compute rdf:type owl:Class ;
          rdfs:subClassOf :DatabricksResource .
 
 
-###  http://www.databricks.com/ontology/systemTables/DatabricksResource
+###  http://www.databricks.com/ontology/DatabricksResource
 :DatabricksResource rdf:type owl:Class .
 
 
-###  http://www.databricks.com/ontology/systemTables/Function
+###  http://www.databricks.com/ontology/Function
 :Function rdf:type owl:Class ;
           rdfs:subClassOf :Securable .
 
 
-###  http://www.databricks.com/ontology/systemTables/Notebook
+###  http://www.databricks.com/ontology/Notebook
 :Notebook rdf:type owl:Class ;
           rdfs:subClassOf :DatabricksResource .
 
 
-###  http://www.databricks.com/ontology/systemTables/Pipeline
+###  http://www.databricks.com/ontology/Pipeline
 :Pipeline rdf:type owl:Class ;
           rdfs:subClassOf :DatabricksResource .
 
 
-###  http://www.databricks.com/ontology/systemTables/Query
+###  http://www.databricks.com/ontology/Query
 :Query rdf:type owl:Class ;
        rdfs:subClassOf :DatabricksResource .
 
 
-###  http://www.databricks.com/ontology/systemTables/Schema
+###  http://www.databricks.com/ontology/Schema
 :Schema rdf:type owl:Class ;
         rdfs:subClassOf :Securable .
 
 
-###  http://www.databricks.com/ontology/systemTables/Securable
+###  http://www.databricks.com/ontology/Securable
 :Securable rdf:type owl:Class ;
            rdfs:subClassOf :DatabricksResource .
 
 
-###  http://www.databricks.com/ontology/systemTables/Table
+###  http://www.databricks.com/ontology/Table
 :Table rdf:type owl:Class ;
        rdfs:subClassOf :Securable .
 
 
-###  http://www.databricks.com/ontology/systemTables/User
+###  http://www.databricks.com/ontology/User
 :User rdf:type owl:Class ;
       rdfs:subClassOf :DatabricksResource .
 
 
-###  http://www.databricks.com/ontology/systemTables/Volume
+###  http://www.databricks.com/ontology/Volume
 :Volume rdf:type owl:Class ;
         rdfs:subClassOf :Securable .
 
 
-###  http://www.databricks.com/ontology/systemTables/Warehouse
+###  http://www.databricks.com/ontology/Warehouse
 :Warehouse rdf:type owl:Class ;
            rdfs:subClassOf :Compute .
 
 
-###  http://www.databricks.com/ontology/systemTables/Workspace
+###  http://www.databricks.com/ontology/Workspace
 :Workspace rdf:type owl:Class ;
            rdfs:subClassOf :DatabricksResource .
 
