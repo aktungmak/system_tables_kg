@@ -4,7 +4,7 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.databricks.com/ontology/systemTables//> .
+@base <http://www.databricks.com/ontology/systemTables/> .
 
 <http://www.databricks.com/ontology/systemTables/> rdf:type owl:Ontology .
 
@@ -28,6 +28,12 @@
 :executedInWorkspace rdf:type owl:ObjectProperty ;
                      rdfs:subPropertyOf :inWorkspace ;
                      rdfs:domain :Query .
+
+
+###  http://www.databricks.com/ontology/systemTables/functionInSchema
+:functionInSchema rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf :inSchema ;
+                  rdfs:domain :Function .
 
 
 ###  http://www.databricks.com/ontology/systemTables/inCatalog
@@ -193,6 +199,12 @@
 :email rdf:type owl:DatatypeProperty .
 
 
+###  http://www.databricks.com/ontology/systemTables/functionName
+:functionName rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf :name ;
+              rdfs:domain :Function .
+
+
 ###  http://www.databricks.com/ontology/systemTables/id
 :id rdf:type owl:DatatypeProperty .
 
@@ -333,6 +345,11 @@
 
 ###  http://www.databricks.com/ontology/systemTables/DatabricksResource
 :DatabricksResource rdf:type owl:Class .
+
+
+###  http://www.databricks.com/ontology/systemTables/Function
+:Function rdf:type owl:Class ;
+          rdfs:subClassOf :Securable .
 
 
 ###  http://www.databricks.com/ontology/systemTables/Notebook
