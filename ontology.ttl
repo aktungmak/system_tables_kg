@@ -125,7 +125,7 @@
 ###  http://www.databricks.com/ontology/readTable
 :readTable rdf:type owl:ObjectProperty ;
            rdfs:subPropertyOf :tableLineageAction ;
-           rdfs:range :Table .
+           rdfs:range :Tabular .
 
 
 ###  http://www.databricks.com/ontology/regionCloud
@@ -817,7 +817,7 @@
 
 ###  http://www.databricks.com/ontology/MaterializedView
 :MaterializedView rdf:type owl:Class ;
-                  rdfs:subClassOf :Securable .
+                  rdfs:subClassOf :Tabular .
 
 
 ###  http://www.databricks.com/ontology/MaterializedViewAllPrivileges
@@ -977,7 +977,7 @@
 
 ###  http://www.databricks.com/ontology/MetricView
 :MetricView rdf:type owl:Class ;
-            rdfs:subClassOf :Securable .
+            rdfs:subClassOf :Tabular .
 
 
 ###  http://www.databricks.com/ontology/Model
@@ -1311,7 +1311,7 @@
 
 ###  http://www.databricks.com/ontology/Table
 :Table rdf:type owl:Class ;
-       rdfs:subClassOf :Securable .
+       rdfs:subClassOf :Tabular .
 
 
 ###  http://www.databricks.com/ontology/TableAllPrivileges
@@ -1354,6 +1354,11 @@
              rdfs:label "SELECT" .
 
 
+###  http://www.databricks.com/ontology/Tabular
+:Tabular rdf:type owl:Class ;
+         rdfs:subClassOf :Securable .
+
+
 ###  http://www.databricks.com/ontology/Use
 :Use rdf:type owl:Class ;
      rdfs:subClassOf :SecurablePrivilege .
@@ -1373,7 +1378,7 @@
 
 ###  http://www.databricks.com/ontology/View
 :View rdf:type owl:Class ;
-      rdfs:subClassOf :Securable .
+      rdfs:subClassOf :Tabular .
 
 
 ###  http://www.databricks.com/ontology/ViewAllPrivileges
