@@ -6,7 +6,7 @@ from r2r import Mapping
 from databricks.sdk import WorkspaceClient
 from pyspark.sql import Window
 from pyspark.sql.functions import col, when, explode, row_number
-import dlt
+from pyspark import pipelines as dp
 import iri
 
 OUTPUT_TABLE = spark.conf.get("output_table")
@@ -21,7 +21,7 @@ def scd2_latest(table_name, sequence, *key_cols):
     return spark.table(table_name).withColumn(row_num, row_number().over(window_spec)).filter(col(row_num) == 1)
 
 
-@dlt.table(name=USERS_TABLE)
+@dp.table(name=USERS_TABLE)
 def fetch_users():
     users = (
         {
@@ -231,12 +231,12 @@ mappings = {
 mapped_names = [mapping.to_dlt(spark, name) for name, mapping in mappings.items()]
 
 
-@dlt.table(name=OUTPUT_TABLE,
+@dp.table(name=OUTPUT_TABLE,
            comment="Databricks metadata in triple format",
            cluster_by=["s", "p", "o"])
 def union_all_tables():
     mapped_tables = (
-        dlt.read(mapped_name)
+        dp.read(mapped_name)
         for mapped_name in mapped_names
     )
     return reduce(lambda df1, df2: df1.union(df2), mapped_tables)
