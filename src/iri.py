@@ -9,7 +9,7 @@ def _encode_all(*args) -> list:
 
 
 def format_iri(format: str, *cols: Column | str):
-    return format_string(f"<{format}>", *cols)
+    return format_string(f"{format}", *cols)
 
 
 def region(cloud: str, region: str) -> Column:

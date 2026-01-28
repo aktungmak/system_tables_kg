@@ -228,12 +228,12 @@ mappings = {
         )
 }
 
-mapped_names = [mapping.to_dlt(spark, name) for name, mapping in mappings.items()]
+mapped_names = [mapping.to_temporary_view(spark, name) for name, mapping in mappings.items()]
 
 
-@dp.table(name=OUTPUT_TABLE,
-           comment="Databricks metadata in triple format",
-           cluster_by=["s", "p", "o"])
+@dp.materialized_view(name=OUTPUT_TABLE,
+                      comment="Databricks metadata in triple format",
+                      cluster_by=["s", "p", "o"])
 def union_all_tables():
     mapped_tables = (
         dp.read(mapped_name)

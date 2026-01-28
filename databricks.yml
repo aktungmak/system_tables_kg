@@ -14,8 +14,8 @@ resources:
   pipelines:
     ontobricks_pipeline:
       name: ontobricks_pipeline
-      catalog: users
-      schema: joshua_green
+      catalog: ${var.output_catalog}
+      schema: ${var.output_schema}
       serverless: true
       libraries:
         - file:
@@ -24,24 +24,3 @@ resources:
       configuration:
         bundle.sourcePath: ${workspace.file_path}/src
         output_table: ${var.output_table}
-
-targets:
-  dev:
-    # The default target uses 'mode: development' to create a development copy.
-    # - Deployed resources get prefixed with '[dev my_user_name]'
-    # - Any job schedules and triggers are paused by default.
-    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
-    mode: development
-    default: true
-    workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
-
-#  prod:
-#    mode: production
-#    workspace:
-#      host: https://e2-demo-field-eng.cloud.databricks.com
-#      # We explicitly deploy to /Workspace/Users/joshua.green@databricks.com to make sure we only have a single copy.
-#      root_path: /Workspace/Users/joshua.green@databricks.com/.bundle/${bundle.name}/${bundle.target}
-#    permissions:
-#      - user_name: joshua.green@databricks.com
-#        level: CAN_MANAGE
