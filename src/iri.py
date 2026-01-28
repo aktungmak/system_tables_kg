@@ -89,8 +89,8 @@ def notebook(workspace_id: str, notebook_id: str) -> Column:
 
 
 def pred(name: str) -> str:
-    return f"<{dbx_prefix}{name}>"
+    return f"{dbx_prefix}{name}"
 
 
 def type(name: str) -> str:
-    return f"<{dbx_prefix}{name}>"
+    return f"{dbx_prefix}{name}"
