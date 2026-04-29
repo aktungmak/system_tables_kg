@@ -1,5 +1,5 @@
 bundle:
-  name: ontobricks
+  name: system_tables_kg
   uuid: 09a12a19-e68d-4ada-944c-d514fa350de7
 
 variables:
@@ -12,14 +12,17 @@ variables:
 
 resources:
   pipelines:
-    ontobricks_pipeline:
-      name: ontobricks_pipeline
+    mapping_pipeline:
+      name: mapping_pipeline
       catalog: ${var.output_catalog}
       schema: ${var.output_schema}
       serverless: true
+      environment:
+        dependencies:
+          - git+https://github.com/aktungmak/spark-r2r
       libraries:
         - file:
-            path: src/ontobricks_pipeline.py
+            path: src/pipeline.py
 
       configuration:
         bundle.sourcePath: ${workspace.file_path}/src
