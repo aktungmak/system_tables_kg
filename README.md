@@ -3,49 +3,30 @@
 This project contains a Spark Declarative Pipeline that maps the Databricks system tables
 into a set of RDF triples that can be queried directly or loaded into a triplestore.
 Additionally, it includes an RDFS ontology that defines the relationships it generates. 
+To generate the pipeline, it uses [spark-r2r](https://github.com/aktungmak/spark-r2r).
 
 ## Getting started
 
-1. Install the Databricks CLI from https://docs.databricks.com/dev-tools/cli/databricks-cli.html
-
+1. Install the Databricks CLI from [https://docs.databricks.com/dev-tools/cli/databricks-cli.html](https://docs.databricks.com/dev-tools/cli/databricks-cli.html)
 2. Authenticate to your Databricks workspace, if you have not done so already:
-    ```
+  ```
     $ databricks configure
-    ```
-
+  ```
 3. To deploy a development copy of this project, type:
-    ```
-    $ databricks bundle deploy --target dev
-    ```
-    (Note that "dev" is the default target, so the `--target` parameter
-    is optional here.)
+  ```
+    $ databricks bundle deploy
+  ```
+    By default, this deploys a pipeline called `mapping_pipeline` to the
+    selected workspace. This can be customised by editing `databricks.yml`.
+4. To run the mapping pipeline, use the following command:
+  ```
+   $ databricks bundle run mapping_pipeline
+  ```
+   The output will be written to the table specified when deploying the bundle.
+   You can now use [sparql2sql](https://github.com/aktungmak/sparql2sql) to run
+   graph queries against it!
 
-    This deploys everything that's defined for this project.
-    For example, the default template would deploy a job called
-    `[dev yourname] ontobricks_job` to your workspace.
-    You can find that job by opening your workpace and clicking on **Workflows**.
+## Missing mappings
 
-4. Similarly, to deploy a production copy, type:
-   ```
-   $ databricks bundle deploy --target prod
-   ```
-
-   Note that the default job from the template has a schedule that runs every day
-   (defined in resources/ontobricks.job.yml). The schedule
-   is paused when deploying in development mode (see
-   https://docs.databricks.com/dev-tools/bundles/deployment-modes.html).
-
-5. To run a job or pipeline, use the "run" command:
-   ```
-   $ databricks bundle run
-   ```
-6. Optionally, install the Databricks extension for Visual Studio code for local development from
-   https://docs.databricks.com/dev-tools/vscode-ext.html. It can configure your
-   virtual environment and setup Databricks Connect for running unit tests locally.
-   When not using these tools, consult your development environment's documentation
-   and/or the documentation for Databricks Connect for manually setting up your environment
-   (https://docs.databricks.com/en/dev-tools/databricks-connect/python/index.html).
-
-7. For documentation on the Databricks asset bundles format used
-   for this project, and for CI/CD configuration, see
-   https://docs.databricks.com/dev-tools/bundles/index.html.
+Not every column of every system table is mapped.
+If you would like to contribute more mappings, please feel free to open a PR!
