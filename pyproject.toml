@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "system-tables-kg"
+version = "1.0.0"
+description = "Spark Declarative Pipeline mapping Databricks system tables to RDF triples (spark-r2r / R2RML)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Joshua Green", email = "joshua.green@databricks.com" }]
+dependencies = [
+  "r2r @ git+https://github.com/aktungmak/spark-r2r",
+  "pyspark",
+]
